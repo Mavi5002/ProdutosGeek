@@ -44,6 +44,18 @@ class ProdutoService():
         self.session.commit()
         self.session.refresh(produto)
         return produto
+    
+    def atualiza_produto(self, id:int, data: ProdutoModel):
+        db_produto = self.session.get(ProdutoModel, id)
+
+        pdct_data = data.model_dump(exclude_unset=True)
+
+        db_produto.sqlmodel_update(pdct_data)
+
+        self.session.add(db_produto)
+        self.session.commit()
+        self.session.refresh(db_produto)
+        return db_produto
 
     def atualiza_estoque(self, id:int, dado_estoque:EstoqueAtualiza):
         produto = self.get_produto_by_id(id)

@@ -38,17 +38,16 @@ def novo_produto(produto:ProdutoDTO):
     return produtos_service.save_produto(novo)
 
 
-""" @router.put("/{id}")
-def update_produto(id:int, produto:ProdutoDTO):
-    db_produto = ProdutoModel(
-                              nome = produto.nome,
-                              descriçao = produto.descriçao,
-                              preço = produto.preço,
-                              categoria = produto.categoria,
-                              franquia = produto.franquia,
-                              quantidade_estoque = produto.quantidade_estoque)
-    
-    return produtos_service.update_produto(produto=db_produto, id=id) """
+@router.put("/{id}")
+def atualizar_produto(id:int, dds:ProdutoDTO):
+    produto = produtos_service.get_produto_by_id(id=id)
+    if not produto:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Produto não encontrado")
+    try:
+        produto_atualizado = produtos_service.atualiza_produto(id=id, data=dds)
+        return produto_atualizado
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.put("/estoque/{id}")
