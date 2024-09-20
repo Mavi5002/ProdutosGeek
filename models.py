@@ -1,4 +1,3 @@
-from sqlalchemy import table
 from sqlmodel import SQLModel, Field
 #field atribui caraacteristicas adicionais dos atributos
 
@@ -9,9 +8,9 @@ class Produto(SQLModel, table=True):
     preço: float
     categoria:str
     franquia:str
-    quantidade_estoque:int = 0
+    quantidade_estoque:int 
 
-
+""" 
     def adiciona_estoque(self):
         if not self.quantidade_estoque < 0:
             self.quantidade_estoque += 1
@@ -19,4 +18,4 @@ class Produto(SQLModel, table=True):
     def tira_estoque(self):
         if not self.quantidade_estoque < 0:
             self.quantidade_estoque -= 1
-            raise Exception()
+            raise Exception() """

@@ -1,14 +1,20 @@
 from fastapi import APIRouter, status, HTTPException
 from models import Produto
-from ulid import ULID
-from sqlmodel import Session,select
 from database import get_engine
 from produtos_service import ProdutoService
-
+from dtos import ProdutoDTO,EstoqueAtualiza
+from sqlmodel import Session,select
 
 router = APIRouter()
 
 produtos_service = ProdutoService()
+
+
+
+
+
+
+
 
 
 #criar novo produto
