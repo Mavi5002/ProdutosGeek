@@ -60,6 +60,8 @@ class ProdutoService():
         self.session.refresh(produto)
         return produto
     
+    """ def update_produto(seld,id:int, produto:ProdutoModel): """
+
     
     def remove_produto(self,id: int):
         produto = self.get_produto_by_id(id)
@@ -69,7 +71,7 @@ class ProdutoService():
         
     
         self.session.delete(produto)
-        self.session.comit()
+        self.session.commit()
         return{"OK": status.HTTP_200_OK}
        
 
