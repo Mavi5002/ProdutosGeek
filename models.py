@@ -1,13 +1,13 @@
 from sqlmodel import SQLModel, Field
 #field atribui caraacteristicas adicionais dos atributos
 
-class Produto(SQLModel, table=True):
-    id:int = Field(default=None, primary_key=True)
+class ProdutoModel(SQLModel, table=True):
+    id:int | None=Field(default=None, primary_key=True)
     nome: str
     descriçao:str
     preço: float
     categoria:str
-    franquia:str
+    franquia:str| None
     quantidade_estoque:int 
 
 """ 

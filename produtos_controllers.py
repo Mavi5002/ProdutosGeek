@@ -1,33 +1,41 @@
 from fastapi import APIRouter, status, HTTPException
-from models import Produto
+from models import ProdutoModel
 from database import get_engine
 from produtos_service import ProdutoService
 from dtos import ProdutoDTO,EstoqueAtualiza
-from sqlmodel import Session,select
+""" from sqlmodel import Session,select """
 
 router = APIRouter()
 
 produtos_service = ProdutoService()
 
 
+@router.get("/{id}")
+def get_produto_by_id(id:int):
+    return produtos_service.get_produto_by_id(id=id)
 
 
-
+@router.get("/")
+def produtos_lista(nome: str| None = None , preço: float| None = None, categoria:str |None = None, franquia:str |None = None):
+    return produtos_service.get_all_produtos(nome=nome,preço=preço,categoria=categoria,franquia=franquia)
 
 
 
 
 #criar novo produto
-@router.post("/",response_model=Produto,
+@router.post("/",
+             response_model=ProdutoModel,
              status_code=status.HTTP_201_CREATED)
-def novo_produto(produto:Produto):
-    novo = Produto(nome=produto.nome,
-                    descriçao =produto.descriçao,
+def novo_produto(produto:ProdutoDTO):
+    novo = ProdutoModel(
+                    nome=produto.nome,
+                    descriçao=produto.descriçao,
                     preço=produto.preço,
                     categoria= produto.categoria,
-                    franquia=produto.franquia)
+                    franquia=produto.franquia,
+                    quantidade_estoque=produto.quantidade_estoque)
 
-    return produtos_service.save_produto(novo_produto)
+    return produtos_service.save_produto(novo)
 
 
 

@@ -1,42 +1,49 @@
 from sqlmodel import Session, select
 from sqlalchemy import update
 from database import get_engine
-from models import Produto
+from models import ProdutoModel
 from fastapi import status, HTTPException
 from dtos import ProdutoDTO,EstoqueAtualiza
 
 class ProdutoService():
+    
     def __init__(self):#inicializa uma sessão com o banco de dados
-        engine = get_engine
+        engine = get_engine()
         self.session = Session(engine)
         #interface usado para interaçao com o banco de dados
 
     #Faz uma busca pelo numero de indentificação
-    def get_produto_by_id(self,id: int):
+    def get_produto_by_id(self, id: int):
         #sttm:statement(consulta)
 
-        sttm = select(Produto).where(Produto.id==id)
+        sttm = select(ProdutoModel).where(ProdutoModel.id==id)
         return self.session.exec(sttm).one_or_none()
         #retorna um unico resultado da consulta se houver um registro correspondente
     
     #funçao de busca por um filtro especifico
     def get_all_produtos(self, nome: str| None = None , preço: float| None = None, categoria:str |None = None, franquia:str |None = None ):
-        sttm = select(Produto)
-
-        if nome:
-            sttm = sttm.where(Produto.nome.in_(nome))
+        if nome != None:
+            sttm = select(ProdutoModel).where(ProdutoModel.nome==nome)
         
-        if nome:
-            sttm = sttm.where(Produto.preço.in_(preço))
-
-        if categoria:
-            sttm = sttm.where(Produto.categoria.in_(categoria))
+        elif preço != None:
+            sttm = select(ProdutoModel).where(ProdutoModel.preço==preço)
         
-        if franquia:
-            sttm = sttm.where(Produto.franquia.in_(franquia))
+        elif categoria != None:
+            sttm = select(ProdutoModel).where(ProdutoModel.categoria==categoria)
         
-        return self.session.exec(sttm).all
+        elif franquia != None:
+            sttm = select(ProdutoModel).where(ProdutoModel.franquia==franquia)
+        
+        else:
+            sttm = select(ProdutoModel)
+        
+        return self.session.exec(sttm).all()
     
+    def save_produto(self, produto: ProdutoModel):
+        self.session.add(produto)
+        self.session.commit()
+        self.session.refresh(produto)
+        return produto
 
     def atualiza_estoque(self, id:int, dado_estoque:EstoqueAtualiza):
         produto = self.get_produto_by_id(id)
@@ -63,15 +70,11 @@ class ProdutoService():
     
         self.session.delete(produto)
         self.session.comit()
-        return{"OK":status.HTTP_200_OK}
+        return{"OK": status.HTTP_200_OK}
        
 
     
-    def save_produto(self, produto: Produto):
-        self.session.add(produto)
-        self.session.commit()
-        self.session.refresh(produto)
-        return produto
+    
 
 
     

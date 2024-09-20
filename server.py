@@ -6,4 +6,4 @@ app = FastAPI()
 
 sync_database(get_engine())
 
-app.include_router(router,prefix="/api/rides")
+app.include_router(router, prefix="/api")

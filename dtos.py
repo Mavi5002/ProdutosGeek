@@ -2,9 +2,10 @@ from pydantic import BaseModel
 
 class ProdutoDTO(BaseModel):
     nome:str
-    desc:str
+    descriçao:str
     preço:float
-    qtd_estoque:str
+    quantidade_estoque:int
+    categoria:str
     franquia:str
 
 
